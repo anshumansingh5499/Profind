@@ -30,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       <img
         src="/bg.png"
         alt="Job search illustration"
-        className="hidden lg:block absolute right-8 top-36 w-[320px] max-w-sm select-none pointer-events-none opacity-80"
+        className="hidden lg:block absolute right-8 top-32 w-[320px] max-w-sm select-none pointer-events-none opacity-80"
       />
 
       <div
@@ -69,10 +69,10 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
           </h1>
 
           {/* Subtext */}
-          <p className="text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
+          {/* <p className="text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
             Discover remote-friendly positions across tech, product, design, and
             more. Search globally, filter smarter, and apply seamlessly.
-          </p>
+          </p> */}
 
           {/* Search form */}
           <form
