@@ -51,10 +51,10 @@ export const FiltersSidebar: React.FC<Props> = ({
           📱 MOBILE — Collapsible Filters
           =========================== */}
       <div className="md:hidden w-full">
-        <details className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-lg shadow-sm">
+        <details className="bg-white/90 backdrop-blur-xl border border-slate-200  shadow-sm">
           <summary className="px-4 py-3 text-sm font-medium cursor-pointer flex justify-between items-center">
             Filters
-            <span className="text-xs text-slate-500"> ▽ </span>
+            <span className="text-xs text-slate-500">Tap to open ▽ </span>
           </summary>
 
           <div className="px-3 py-3">
