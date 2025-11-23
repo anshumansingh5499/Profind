@@ -52,7 +52,7 @@ export interface Job {
 export interface FilterState {
   keyword: string;
   location: string;
-  quickLocation: WorkMode | "";// for Remote/Hybrid/On-site chips
+  quickLocation: WorkMode | ""; // for Remote/Hybrid/On-site chips
   experienceLevels: ExperienceLevel[];
   jobTypes: JobType[];
   workModes: WorkMode[];
@@ -65,6 +65,7 @@ export interface FilterState {
   mustHaveSkills: string[];
 }
 
+// ✅ Single, final ParsedResume definition
 export interface ParsedResume {
   name?: string;
   totalExperienceYears?: number;

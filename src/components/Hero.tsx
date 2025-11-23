@@ -16,8 +16,13 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   };
 
   return (
-    <header className="relative overflow-hidden bg-[#3222be] text-white border-b border-slate-800 ">
-      <Header />
+<header
+  className="relative overflow-hidden bg-[#22168f] text-white border-b border-slate-800
+  bg-[radial-gradient(circle_at_5px_4px,rgba(255,255,255,0.2)_3px,transparent_0)]
+bg-[size:50px_50px]
+"
+>
+   <Header />
 
       {/* Premium animated gradient lights */}
       <div className="pointer-events-none absolute inset-0">

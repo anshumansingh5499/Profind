@@ -59,38 +59,59 @@ function extractSkillsFromText(text: string): string[] {
   return Array.from(found);
 }
 
+// Helper type to allow optional raw text from backend in future
+type ResumeWithRaw = ParsedResume & {
+  rawText?: string;
+  text?: string;
+};
+
+function titleCaseSkill(skill: string): string {
+  // simple title-case helper for display
+  if (!skill) return skill;
+  if (skill.toLowerCase() === "reactjs") return "React.js";
+  if (skill.toLowerCase() === "nextjs") return "Next.js";
+  if (skill.toLowerCase() === "node.js" || skill.toLowerCase() === "node")
+    return "Node.js";
+
+  return skill
+    .split(/[\s_/]+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 function computeMatch(job: Job, resume: ParsedResume | null): MatchResult | null {
   if (!resume) return null;
 
+  const extended = resume as ResumeWithRaw;
+
+  // ---- Collect skills from the job ----
   const jobSkills = new Set<string>();
 
-  // from job.skills array
+  // 1) From job.skills (if present)
   (job.skills ?? []).forEach((s) => jobSkills.add(normalizeSkill(s)));
 
-  // from job description text
+  // 2) From requiredSkills / niceToHaveSkills
+  (job.requiredSkills ?? []).forEach((s) => jobSkills.add(normalizeSkill(s)));
+  (job.niceToHaveSkills ?? []).forEach((s) => jobSkills.add(normalizeSkill(s)));
+
+  // 3) From job description text using known keywords
   if (job.description) {
     extractSkillsFromText(job.description).forEach((s) =>
       jobSkills.add(normalizeSkill(s))
     );
   }
 
-  // resume skills
+  // ---- Collect skills from the resume (AI-parsed summary/skills) ----
   const resumeSkillSet = new Set<string>();
 
-  // from structured resume.skills if present
-  const resumeSkillsArray =
-    (resume as any).skills && Array.isArray((resume as any).skills)
-      ? ((resume as any).skills as string[])
-      : [];
+  const resumeSkillsArray = Array.isArray(extended.skills)
+    ? extended.skills
+    : [];
 
   resumeSkillsArray.forEach((s) => resumeSkillSet.add(normalizeSkill(s)));
 
-  // from raw text if available
-  const rawText =
-    ((resume as any).rawText as string | undefined) ??
-    ((resume as any).text as string | undefined) ??
-    "";
-
+  // If in future you add raw resume text from parser, we’ll also mine skills from it
+  const rawText = extended.rawText ?? extended.text ?? "";
   if (rawText) {
     extractSkillsFromText(rawText).forEach((s) =>
       resumeSkillSet.add(normalizeSkill(s))
@@ -112,6 +133,7 @@ function computeMatch(job: Job, resume: ParsedResume | null): MatchResult | null
     };
   }
 
+  // ---- Compare skills ----
   const matchedSkills: string[] = [];
   const missingSkills: string[] = [];
   const extraSkills: string[] = [];
@@ -130,31 +152,41 @@ function computeMatch(job: Job, resume: ParsedResume | null): MatchResult | null
     }
   });
 
+  // ---- Score & match level ----
   const coverage = matchedSkills.length / jobSkillList.length;
   const missingPenalty = missingSkills.length * 3; // -3 per missing skill
   let score = Math.round(60 + coverage * 35 - missingPenalty);
-
-  score = Math.max(5, Math.min(98, score)); // keep within reasonable range
+  score = Math.max(5, Math.min(98, score)); // clamp
 
   let level: MatchLevel = "Low";
   if (score >= 75) level = "High";
   else if (score >= 55) level = "Medium";
 
+  // ---- Suggestions focused on missing skills to add in resume ----
   const suggestions: string[] = [];
 
   if (missingSkills.length) {
+    const humanMissing = missingSkills.map(titleCaseSkill);
     suggestions.push(
-      `Add or highlight these skills in your resume (if you actually have them): ${missingSkills
-        .map((s) => s.toUpperCase())
-        .join(", ")}.`
+      `These skills appear in the job description but not clearly in your resume: ${humanMissing.join(
+        ", "
+      )}. Add them to your skills section or summary if you actually have experience with them.`
     );
+
+    const topForHeadline = humanMissing.slice(0, 3).join(", ");
+    if (topForHeadline) {
+      suggestions.push(
+        `You can update your resume summary line to something like: "Frontend engineer with hands-on experience in ${topForHeadline}."`
+      );
+    }
   }
 
   if (matchedSkills.length) {
+    const humanMatched = matchedSkills.map(titleCaseSkill);
     suggestions.push(
-      `Your resume already mentions: ${matchedSkills
-        .map((s) => s.toUpperCase())
-        .join(", ")}. Make sure these are visible in the top 1/3 of the page.`
+      `Your resume already matches these key skills from the job: ${humanMatched.join(
+        ", "
+      )}. Make sure they are visible in the top 1/3 of your resume (summary + key skills).`
     );
   }
 
@@ -247,7 +279,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                       key={s}
                       className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-200 border border-emerald-500/30"
                     >
-                      {s}
+                      {titleCaseSkill(s)}
                     </span>
                   ))}
                 </div>
@@ -265,12 +297,14 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                       key={s}
                       className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-200 border border-rose-500/40"
                     >
-                      {s}
+                      {titleCaseSkill(s)}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-slate-500 italic">You cover most listed skills.</p>
+                <p className="text-slate-500 italic">
+                  You cover most listed skills.
+                </p>
               )}
             </div>
 
@@ -283,7 +317,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                       key={s}
                       className="px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-200 border border-sky-500/40"
                     >
-                      {s}
+                      {titleCaseSkill(s)}
                     </span>
                   ))}
                 </div>
@@ -316,8 +350,8 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
               {match.tailoredSummary}
             </p>
             <p className="text-[10px] text-slate-500">
-              Paste this into your resume summary/about section and adjust the details
-              to match your actual experience.
+              Paste this into your resume summary/about section and adjust the
+              details to match your actual experience.
             </p>
           </div>
         </>

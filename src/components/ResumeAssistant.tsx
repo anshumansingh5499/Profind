@@ -9,21 +9,55 @@ interface Props {
 }
 
 export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => {
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isParsing, setIsParsing] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // mock parsing
-    const simulated: ParsedResume = {
-      name: "Your Name",
-      totalExperienceYears: 2,
-      skills: ["React", "TypeScript", "JavaScript", "HTML", "CSS", "Tailwind"],
-      preferredLocations: ["Remote", "Bengaluru", "Noida"],
-      inferredExperienceLevel: "1–3 years",
-    };
+    setError(null);
+    setIsParsing(true);
 
-    onResumeChange(simulated);
-    alert(`✅ Mock parsed resume from "${file.name}"`);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // 🔗 Same style as your /api/jobs call
+      const res = await fetch("/api/parse-resume", {
+        method: "POST",
+        body: formData,
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let payload: any = null;
+      try {
+        payload = await res.json();
+      } catch {
+        // ignore JSON parse error
+      }
+
+      if (!res.ok) {
+        const msg =
+          payload?.error ||
+          `Failed to parse resume (HTTP ${res.status})`;
+        throw new Error(msg);
+      }
+
+      const parsed: ParsedResume = payload;
+      onResumeChange(parsed);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Couldn't parse your resume. Please try again."
+      );
+      onResumeChange(null);
+    } finally {
+      setIsParsing(false);
+      e.target.value = "";
+    }
   };
 
   return (
@@ -39,8 +73,8 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
       "
     >
       {/* 🔵 AI Glow Ring */}
-      <div className="absolute -top-20 -right-20 w-56 h-56 bg-indigo-400/30 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-24 -left-16 w-56 h-56 bg-purple-400/20 rounded-full blur-3xl"></div>
+      <div className="absolute -top-20 -right-20 w-56 h-56 bg-indigo-400/30 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 -left-16 w-56 h-56 bg-purple-400/20 rounded-full blur-3xl" />
 
       {/* ⚡ AI Chip Badge */}
       <motion.div
@@ -70,29 +104,61 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
 
       {/* Upload Box */}
       <motion.label
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="
-          relative z-10 cursor-pointer
-          flex items-center justify-center gap-2 
-          w-full py-3 rounded-xl 
-          border border-slate-300 
-          bg-white/70 
-          hover:bg-white
-          hover:border-indigo-400 
-          hover:shadow-[0_0_18px_rgba(99,102,241,0.25)]
-          transition
-        "
-      >
-        <UploadCloud size={18} className="text-indigo-600" />
-        <span className="text-[12px] font-medium text-slate-700">
-          Upload Resume (PDF / DOCX)
-        </span>
-        <input type="file" className="hidden" onChange={handleUpload} />
-      </motion.label>
+  initial={{ opacity: 1 }}
+  animate={
+    isParsing
+      ? {
+          scale: [1, 1.03, 1],
+          y: [0, -2, 0],
+          boxShadow: [
+            "0 0 8px rgba(99,102,241,0.3)",
+            "0 0 14px rgba(99,102,241,0.5)",
+            "0 0 8px rgba(99,102,241,0.3)",
+          ],
+        }
+      : { scale: 1, y: 0, boxShadow: "none" }
+  }
+  transition={
+    isParsing
+      ? { repeat: Infinity, duration: 1.4, ease: "easeInOut" }
+      : { duration: 0.2 }
+  }
+  whileHover={{ scale: isParsing ? 1 : 1.02 }}
+  whileTap={{ scale: isParsing ? 1 : 0.98 }}
+  className={`
+    relative z-10 cursor-pointer
+    flex items-center justify-center gap-2
+    w-full py-3 rounded-xl
+    border ${isParsing ? "border-indigo-400" : "border-slate-300"}
+    bg-white/70 hover:bg-white
+    hover:border-indigo-400
+    hover:shadow-[0_0_18px_rgba(99,102,241,0.25)]
+    transition
+    ${isParsing ? "opacity-80 pointer-events-none" : ""}
+  `}
+>
+  <UploadCloud size={18} className="text-indigo-600" />
+  <span className="text-[12px] font-medium text-slate-700">
+    {isParsing ? "Analyzing your resume..." : "Upload Resume (PDF / DOCX)"}
+  </span>
+  <input
+    type="file"
+    className="hidden"
+    accept=".pdf,.doc,.docx"
+    onChange={handleUpload}
+  />
+</motion.label>
+
+
+      {/* Error message */}
+      {error && (
+        <p className="mt-2 text-[11px] text-red-600">
+          {error}
+        </p>
+      )}
 
       {/* AI Parsed Output */}
-      {resume && (
+      {resume && !error && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,33 +169,22 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
             shadow-sm relative
           "
         >
-          {/* AI Scanning Effect */}
-          <div className="relative mb-4 h-[4px] bg-slate-200 rounded-full overflow-hidden">
-            <motion.div
-              animate={{ x: ["-30%", "120%"] }}
-              transition={{ repeat: Infinity, duration: 1.3, ease: "easeInOut" }}
-              className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-            />
-          </div>
-
           <p className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1">
             <Sparkles size={12} className="text-indigo-600" />
             AI-Parsed Summary
           </p>
 
-          {/* Experience */}
           <p className="text-[11px] text-slate-600 mb-2">
             Experience:{" "}
             <span className="font-semibold text-slate-900">
-              {resume.totalExperienceYears} yrs
+              {resume.totalExperienceYears ?? 0} yrs
             </span>{" "}
-            · {resume.inferredExperienceLevel}
+            · {resume.inferredExperienceLevel ?? "Not specified"}
           </p>
 
-          {/* Skills */}
           <p className="text-[11px] text-slate-600 mb-1">Skills Identified:</p>
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {resume.skills.map((s) => (
+            {resume.skills?.map((s) => (
               <span
                 key={s}
                 className="
@@ -143,10 +198,9 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
             ))}
           </div>
 
-          {/* Preferred Locations */}
           <p className="text-[11px] text-slate-600 mb-1">Preferred Locations:</p>
           <div className="flex flex-wrap gap-1">
-            {resume.preferredLocations.map((loc) => (
+            {resume.preferredLocations?.map((loc) => (
               <span
                 key={loc}
                 className="
