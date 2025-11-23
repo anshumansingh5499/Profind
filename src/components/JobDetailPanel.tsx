@@ -2,6 +2,7 @@ import React from "react";
 import type { Job, ParsedResume } from "../types";
 import { Bookmark, BookmarkCheck, ExternalLink } from "lucide-react";
 import { AiResumeAdvisor } from "./AiResumeAdvisor";
+import { CompanyLogo } from "./CompanyLogo";
 
 interface Props {
   job: Job | null;
@@ -18,64 +19,54 @@ export const JobDetailPanel: React.FC<Props> = ({
 }) => {
   if (!job) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 text-xs text-slate-500 h-fit flex items-center justify-center">
+      <div className="bg-white shadow-sm border border-slate-100 p-4 text-xs text-slate-500 h-fit flex items-center justify-center">
         Select a job to view details.
       </div>
     );
   }
 
-  const isSaved = !!savedJobs.find((j) => j.id === job.id);
+  const isSaved = savedJobs.some((j) => j.id === job.id);
 
   const handleApplyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.stopPropagation();
     if (!resume) {
       e.preventDefault();
       alert(
-        "Upload your resume in the Resume Assistant panel to get AI-based resume improvements and an ATS match score before applying."
+        "Upload your resume to check AI skill match and get improvement suggestions before applying!"
       );
     }
   };
 
   return (
-    <section
-      className="
-        bg-white rounded-xl shadow-md border border-slate-100 
-        px-6 py-5 max-h-[950px] overflow-y-auto custom-scroll
-      "
-    >
-      {/* ⭐ AI Advisor Section */}
+    <section className="bg-white shadow-md border border-slate-100 px-6 py-5 max-h-[950px] overflow-y-auto custom-scroll">
+      {/* 🔥 AI Resume Advisor */}
       <div className="mb-6">
         <AiResumeAdvisor job={job} resume={resume} />
       </div>
 
-      {/* HEADER */}
-      <div className="flex justify-between items-start gap-6 mb-6">
-        {/* LEFT TEXT */}
-        <div className="flex-1 min-w-0">
-          <h2 className="text-[15px] font-bold text-slate-900 mb-0.5 leading-tight">
-            {job.title}
-          </h2>
+      {/* 🏢 Header with company logo */}
+      <div className="flex justify-between items-start gap-4 mb-6">
+        <div className="flex items-start gap-3">
+          <CompanyLogo name={job.company.name} logoUrl={job.company.logoUrl} size="md" />
 
-          <p className="text-[12px] text-slate-600 font-medium mb-0.5">
-            {job.company.name} • {job.location}
-          </p>
-
-          <p className="text-[11px] text-slate-500">
-            {job.jobType} • {job.workMode} • {job.experienceLevel}
-          </p>
+          <div>
+            <h2 className="text-[15px] font-bold text-slate-900 leading-tight">
+              {job.title}
+            </h2>
+            <p className="text-[12px] text-slate-600 font-medium mb-0.5">
+              {job.company.name} • {job.location}
+            </p>
+            <p className="text-[11px] text-slate-500">
+              {job.jobType} • {job.workMode} • {job.experienceLevel}
+            </p>
+          </div>
         </div>
 
-        {/* RIGHT ACTIONS */}
+        {/* 🎯 Actions */}
         <div className="flex flex-col items-end gap-2 shrink-0">
-          {/* SAVE BUTTON */}
           <button
             onClick={() => onToggleSave(job)}
-            className="
-              text-[11px] flex items-center gap-1 px-3 py-1.5 
-              rounded-md border border-slate-300 
-              hover:border-indigo-400 hover:bg-indigo-50 
-              transition min-w-[72px] justify-center
-            "
+            className="text-[11px] flex items-center gap-1 px-3 py-1.5 
+            border border-slate-300 hover:border-indigo-400 hover:bg-indigo-50"
           >
             {isSaved ? (
               <>
@@ -88,32 +79,26 @@ export const JobDetailPanel: React.FC<Props> = ({
             )}
           </button>
 
-          {/* APPLY BUTTON */}
           <a
             href={job.applyUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleApplyClick}
-            className="
-              text-[11px] flex items-center gap-1 px-3 py-1.5 
-              rounded-md bg-indigo-600 text-white 
-              hover:bg-indigo-500 transition shadow-sm
-              min-w-[72px] justify-center
-            "
+            className="text-[11px] flex items-center gap-1 px-3 py-1.5 
+            bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm"
           >
             Apply <ExternalLink size={12} />
           </a>
 
           {!resume && (
-            <p className="text-[10px] text-slate-500 text-right max-w-[155px] leading-tight">
-              Upload your resume to get AI match score & improvement tips before
-              applying.
+            <p className="text-[10px] text-slate-500 max-w-[160px] leading-tight text-right">
+              Upload your resume to unlock AI skill match before applying.
             </p>
           )}
         </div>
       </div>
 
-      {/* DATE */}
+      {/* 📅 Posted Date */}
       <div className="text-[11px] text-slate-500 mb-4">
         Posted{" "}
         {new Date(job.postedAt).toLocaleDateString(undefined, {
@@ -123,15 +108,15 @@ export const JobDetailPanel: React.FC<Props> = ({
         })}
       </div>
 
-      {/* SALARY */}
+      {/* 💰 Salary */}
       {job.salaryMin && (
         <div className="text-[12px] text-slate-700 font-medium mb-5">
-          💰 Salary: {job.currency} {job.salaryMin.toLocaleString()} –{" "}
-          {job.salaryMax?.toLocaleString()}
+          💰 Salary: {job.currency}{" "}
+          {job.salaryMin.toLocaleString()} – {job.salaryMax?.toLocaleString()}
         </div>
       )}
 
-      {/* JOB DESCRIPTION */}
+      {/* 📄 Job Description */}
       <section className="mb-6">
         <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
           Job Description
@@ -141,39 +126,26 @@ export const JobDetailPanel: React.FC<Props> = ({
         </p>
       </section>
 
-      {/* RESPONSIBILITIES */}
-      <section className="mb-6">
-        <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
-          Key Responsibilities
-        </h3>
-        <ul className="list-disc pl-4 text-[11px] text-slate-600 space-y-1 leading-relaxed">
-          {job.responsibilities.map((r, idx) => (
-            <li key={idx}>{r}</li>
-          ))}
-        </ul>
-      </section>
+      {/* 🛠️ Required Skills */}
+      {job.requiredSkills.length > 0 && (
+        <section className="mb-6">
+          <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
+            Required Skills
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {job.requiredSkills.map((s) => (
+              <span
+                key={s}
+                className="px-2 py-0.5 rounded-full bg-slate-50 border border-slate-200 text-[10px] text-slate-700"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* REQUIRED SKILLS */}
-      <section className="mb-6">
-        <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
-          Required Skills
-        </h3>
-        <div className="flex flex-wrap gap-1.5">
-          {job.requiredSkills.map((s) => (
-            <span
-              key={s}
-              className="
-                px-2 py-0.5 rounded-full bg-slate-50 
-                border border-slate-200 text-[10px] text-slate-700
-              "
-            >
-              {s}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* NICE TO HAVE */}
+      {/* ⭐ Nice To Have */}
       {job.niceToHaveSkills.length > 0 && (
         <section className="mb-6">
           <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
@@ -183,10 +155,7 @@ export const JobDetailPanel: React.FC<Props> = ({
             {job.niceToHaveSkills.map((s) => (
               <span
                 key={s}
-                className="
-                  px-2 py-0.5 rounded-full bg-emerald-50 
-                  border border-emerald-200 text-[10px] text-emerald-700
-                "
+                className="px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-[10px] text-emerald-700"
               >
                 {s}
               </span>
@@ -195,14 +164,13 @@ export const JobDetailPanel: React.FC<Props> = ({
         </section>
       )}
 
-      {/* SIMILAR JOBS */}
+      {/* 🔍 Similar Jobs (Future Feature) */}
       <section className="pt-4 border-t border-slate-200">
         <h3 className="text-xs font-semibold text-slate-900 mb-1.5">
           Similar Jobs
         </h3>
         <p className="text-[11px] text-slate-500 leading-relaxed">
-          In a later version, you can show 3–5 similar roles here based on matching
-          skills, job title, or company.
+          This section will recommend similar jobs based on required skills in future versions.
         </p>
       </section>
     </section>

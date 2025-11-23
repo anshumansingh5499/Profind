@@ -16,82 +16,74 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   };
 
   return (
-<header
-  className="relative overflow-hidden bg-[#22168f] text-white border-b border-slate-800
-  bg-[radial-gradient(circle_at_5px_4px,rgba(255,255,255,0.2)_3px,transparent_0)]
-bg-[size:50px_50px]
-"
->
-   <Header />
-
-      {/* Premium animated gradient lights */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 -left-20 h-96 w-96 rounded-full bg-indigo-600/30 blur-[140px] animate-pulse" />
-        <div className="absolute -bottom-40 -right-20 h-96 w-96 rounded-full bg-emerald-500/20 blur-[140px]" />
-        <div className="absolute top-1/2 right-1/4 h-72 w-72 rounded-full bg-blue-400/10 blur-[120px]" />
+    <header
+      className="
+        relative overflow-hidden 
+        text-slate-900
+      "
+    >
+      {/* GRID BACKGROUND */}
+      <div className="pointer-events-none absolute -inset-40 -z-10">
+        <div
+          className="
+            h-full w-full
+            origin-center rotate-[-18deg]
+            bg-[linear-gradient(#999b9e_1px,transparent_1px),linear-gradient(90deg,#999b9e_1px,transparent_1px)]
+            bg-[length:80px_80px]
+            opacity-70
+          "
+        />
       </div>
 
-      {/* Side Illustration – remote lifestyle */}
-      <img
-        src="/bg.png"
-        alt="Job search illustration"
-        className="hidden lg:block absolute right-8 top-32 w-[320px] max-w-sm select-none pointer-events-none opacity-80"
-      />
+      <Header />
 
-      <div
-        className="relative mx-auto max-w-6xl px-4 sm:px-6 md:px-10 py-6 lg:py-8
-"
-      >
-        <div className="max-w-3xl space-y-10">
-          {/* Overline */}
-          <div className="px-4 py-1 inline-block rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs tracking-wider text-indigo-300">
-            100% Remote Opportunities
-          </div>
+      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 md:px-8 py-12 lg:py-16">
+        {/* Text block */}
+        <div className="max-w-3xl mx-auto text-center mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 mb-3">
+            SMART JOB MATCHING
+          </p>
 
-          {/* Heading */}
-          <h1 className="text-5xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight">
-            Land your next{" "}
-           <span className="relative inline-block font-bold px-2 py-0.5 border-2 border-red-500 rotate-6 rounded-full ">
-  remote
-</span>
-
-            {/* Highlighted word (box underline like the screenshot) */}
-            <span className="relative inline-block">
-              effortlessly
-              <span className="absolute inset-x-0 bottom-1 h-[10px] bg-indigo-400/40 rounded-sm -z-10"></span>
-            </span>
-            {/* Tilted pill badge like “qualified” */}
+          <h1 className="text-4xl sm:text-5xl font-semibold leading-tight tracking-tight mb-4">
+            Find your next{" "}
             <span
               className="
-      inline-block ml-3 px-4 py-1
-      bg-yellow-300 text-black font-bold
-      rotate-[-5deg]
-      shadow-[0_4px_10px_rgba(0,0,0,0.15)] rounded-full 
-    "
+                inline-block px-3 py-1
+               
+                bg-sky-100 text-sky-700
+                border border-sky-200
+                rotate-6
+              "
             >
-              faster
-            </span>
+              Remote
+            </span>{" "}
+            role
           </h1>
 
-          {/* Subtext */}
-          {/* <p className="text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
-            Discover remote-friendly positions across tech, product, design, and
-            more. Search globally, filter smarter, and apply seamlessly.
-          </p> */}
+          <p className="text-sm sm:text-base text-slate-500">
+            Discover curated remote opportunities tailored to your skills,
+            experience, and preferred locations — all in one minimal, focused view.
+          </p>
+        </div>
 
-          {/* Search form */}
-          <form
-            onSubmit={handleSubmit}
-            className="p-4 sm:p-5   backdrop-blur-xl   space-y-5"
-          >
+        {/* Search card */}
+        <div
+          className="
+            max-w-3xl mx-auto
+             border border-slate-200 bg-white/80
+            shadow-[0_18px_45px_rgba(15,23,42,0.06)]
+            backdrop-blur
+          "
+        >
+          <form onSubmit={handleSubmit} className="p-4 sm:p-5">
             <div className="flex flex-col gap-4 md:flex-row">
               {/* Keyword */}
-              <div className="flex-1 group rounded-full   border border-white/10 bg-white px-4 py-3 backdrop-blur focus-within:border-indigo-500 transition">
+              <div className="flex-1 border border-slate-200 bg-white px-4 py-3 focus-within:border-sky-400 focus-within:ring-1 focus-within:ring-sky-200 transition">
                 <div className="flex items-center gap-3">
-                  <FiSearch className="text-slate-300 text-lg" />
+                  <FiSearch className="text-slate-400 text-lg" />
                   <input
                     type="text"
-                    className="w-full bg-transparent text-sm text-black placeholder:text-slate-900 outline-none"
+                    className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 outline-none"
                     placeholder="Job title, skill, or company"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
@@ -100,12 +92,12 @@ bg-[size:50px_50px]
               </div>
 
               {/* Location */}
-              <div className="md:w-64 group rounded-full   border border-white/10 bg-white px-4 py-3 backdrop-blur focus-within:border-indigo-500 transition">
+              <div className="md:w-64  border border-slate-200 bg-white px-4 py-3 focus-within:border-sky-400 focus-within:ring-1 focus-within:ring-sky-200 transition">
                 <div className="flex items-center gap-3">
-                  <FiMapPin className="text-slate-300 text-lg" />
+                  <FiMapPin className="text-slate-400 text-lg" />
                   <input
                     type="text"
-                    className="w-full bg-transparent text-sm text-black placeholder:text-slate-900 outline-none"
+                    className="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 outline-none"
                     placeholder="Remote, Worldwide, Europe, etc."
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
@@ -116,23 +108,17 @@ bg-[size:50px_50px]
               {/* Button */}
               <button
                 type="submit"
-                className="md:w-auto w-full rounded-full   bg-blue-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] transition-all"
+                className="
+                  md:w-auto w-full 
+                  bg-slate-900 text-white
+                  px-7 py-3 text-sm font-semibold
+                  shadow-md hover:shadow-lg
+                  hover:bg-black
+                  transition
+                "
               >
-                Find Remote Jobs
+                Search
               </button>
-            </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
-              <span className="rounded-full border border-white/10 bg-white/5 backdrop-blur px-3 py-1">
-                🌍 18,500+ remote jobs
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 backdrop-blur px-3 py-1">
-                🏢 3,200+ global companies
-              </span>
-              <span className="">
-                Popular: React Developer, Product Designer, Data Analyst
-              </span>
             </div>
           </form>
         </div>

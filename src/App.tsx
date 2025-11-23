@@ -12,6 +12,7 @@ import { JobList } from "./components/JobList";
 import { JobDetailPanel } from "./components/JobDetailPanel";
 import { ResumeAssistant } from "./components/ResumeAssistant";
 import { useJobs } from "./hooks/useJobs";
+import { Footer } from "./components/Footer";
 
 const App: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
@@ -86,7 +87,7 @@ const App: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.7fr),minmax(0,1.1fr)] gap-4">
-          <section className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col">
+          <section className="bg-white  shadow-sm border border-slate-100 p-4 flex flex-col">
             <div className="flex justify-between items-center mb-4 gap-2">
               <div>
                 <h2 className="text-lg font-semibold">
@@ -179,6 +180,7 @@ const App: React.FC = () => {
           </aside>
         </div>
       </main>
+      <Footer/>
     </div>
   );
 };

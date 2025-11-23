@@ -66,7 +66,7 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
       className="
-        relative p-6 rounded-2xl 
+        relative p-6  
         bg-white/20 backdrop-blur-2xl 
         border border-white/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
         overflow-hidden
@@ -83,7 +83,7 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
         transition={{ delay: 0.2 }}
         className="
           absolute top-4 right-4 
-          px-3 py-1.5 rounded-full
+          px-3 py-1.5 
           bg-gradient-to-r from-indigo-600 to-purple-600 
           text-white text-[10px] font-semibold 
           shadow-lg flex items-center gap-1
@@ -128,7 +128,7 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
   className={`
     relative z-10 cursor-pointer
     flex items-center justify-center gap-2
-    w-full py-3 rounded-xl
+    w-full py-3 
     border ${isParsing ? "border-indigo-400" : "border-slate-300"}
     bg-white/70 hover:bg-white
     hover:border-indigo-400
@@ -164,7 +164,7 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
           className="
-            mt-6 p-5 rounded-xl 
+            mt-6 p-5 
             bg-white/60 border border-slate-200 
             shadow-sm relative
           "
@@ -188,7 +188,7 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
               <span
                 key={s}
                 className="
-                  px-2 py-0.5 rounded-full 
+                  px-2 py-0.5
                   bg-indigo-50 border border-indigo-100 
                   text-[10px] text-indigo-700
                 "

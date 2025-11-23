@@ -220,7 +220,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
   if (!job) return null;
 
   return (
-    <div className="mt-4 bg-slate-900 text-slate-50 rounded-xl p-4 shadow-md space-y-3">
+    <div className="mt-4 bg-slate-900 text-slate-50  p-4 shadow-md space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-wide text-slate-400">
@@ -240,7 +240,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
             </div>
             <span
               className={
-                "mt-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium " +
+                "mt-0.5 inline-flex items-center px-2 py-0.5  text-[10px] font-medium " +
                 (match.level === "High"
                   ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
                   : match.level === "Medium"
@@ -255,7 +255,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
       </div>
 
       {!resume && (
-        <div className="text-xs text-slate-300 bg-slate-800/60 border border-slate-700 rounded-lg p-3">
+        <div className="text-xs text-slate-300 bg-slate-800/60 border border-slate-700  p-3">
           Upload your resume in the{" "}
           <span className="font-semibold">Resume Assistant</span> panel to get:
           <ul className="list-disc list-inside mt-1 space-y-0.5">
@@ -277,7 +277,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                   {match.matchedSkills.map((s) => (
                     <span
                       key={s}
-                      className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-200 border border-emerald-500/30"
+                      className="px-2 py-0.5  bg-emerald-500/15 text-emerald-200 border border-emerald-500/30"
                     >
                       {titleCaseSkill(s)}
                     </span>
@@ -295,7 +295,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                   {match.missingSkills.map((s) => (
                     <span
                       key={s}
-                      className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-200 border border-rose-500/40"
+                      className="px-2 py-0.5  bg-rose-500/15 text-rose-200 border border-rose-500/40"
                     >
                       {titleCaseSkill(s)}
                     </span>
@@ -315,7 +315,7 @@ export const AiResumeAdvisor: React.FC<Props> = ({ job, resume }) => {
                   {match.extraSkills.map((s) => (
                     <span
                       key={s}
-                      className="px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-200 border border-sky-500/40"
+                      className="px-2 py-0.5  bg-sky-500/15 text-sky-200 border border-sky-500/40"
                     >
                       {titleCaseSkill(s)}
                     </span>

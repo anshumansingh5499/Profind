@@ -7,10 +7,10 @@ export const Header: React.FC = () => {
         className="
           w-[100%] md:w-[100%] 
           bg-white border border-white/20 
-          shadow-[0_18px_45px_rgba(15,23,42,0.25)]
+         
           backdrop-blur-xl 
           flex items-center justify-between
-          px-8 md:px-12 py-1.5 md:py-1.5 rounded-b-[20px]
+          px-8 md:px-12 py-1.5 md:py-1.5 
         "
       >
         {/* Logo */}
@@ -48,8 +48,8 @@ export const Header: React.FC = () => {
               className="
                 text-xs md:text-sm font-medium
                 px-3 md:px-4 py-1.5 md:py-2 
-                rounded-full 
-                bg-red-500
+                
+                bg-blue-500
                 text-white shadow-md
                 hover:shadow-lg hover:brightness-105
                 active:scale-[0.97]

@@ -5,9 +5,9 @@ import type { Job, FilterState } from "../types";
 const REMOTIVE_API = "https://remotive.com/api/remote-jobs";
 
 // Helper types from Job so we stay in sync with your unions
-type Currency = Job["currency"];           // "USD" | "EUR" | "INR"
-type ExperienceLevel = Job["experienceLevel"]; // "Intern / Fresher" | "0–1 years" | ...
-type JobSource = Job["source"];            // "Google Jobs" | "LinkedIn" | "Glassdoor" | "Indeed" | "Other"
+type Currency = Job["currency"]; // "USD" | "EUR" | "INR"
+type ExperienceLevel = Job["experienceLevel"];
+type JobSource = Job["source"];  // "Google Jobs" | "LinkedIn" | "Glassdoor" | "Indeed" | "Other"
 
 interface RemotiveApiResponse {
   "job-count": number;
@@ -20,12 +20,14 @@ interface RemotiveJob {
   title: string;
   company_name: string;
   company_logo?: string;
+  company_logo_url?: string;
   category: string;
   job_type?: string;
   publication_date: string;
   candidate_required_location?: string;
   salary?: string;
   description: string;
+  tags?: string[];
 }
 
 /**
@@ -55,15 +57,38 @@ function mapRemotiveJobToJob(raw: RemotiveJob): Job {
       salaryMax = numbers[1];
     }
 
-    // Only assign values that exist in your union
     if (salaryStr.includes("€")) currency = "EUR";
     else if (salaryStr.includes("₹")) currency = "INR";
     else currency = "USD"; // default
   }
 
-  // 👇 ExperienceLevel must be one of your union values
-  // We'll treat "Not specified" as a Fresher-style level
-  const experienceLevel: ExperienceLevel = "Intern / Fresher";
+  // 🧠 ExperienceLevel inference from title
+  const title = raw.title || "Untitled role";
+  const titleLower = title.toLowerCase();
+  let experienceLevel: ExperienceLevel = "1–3 years";
+
+  if (titleLower.includes("intern")) {
+    experienceLevel = "Intern / Fresher";
+  } else if (
+    titleLower.includes("junior") ||
+    titleLower.includes("entry")
+  ) {
+    experienceLevel = "0–1 years";
+  } else if (
+    titleLower.includes("senior") ||
+    titleLower.includes("sr") ||
+    titleLower.includes("lead")
+  ) {
+    experienceLevel = "5–10 years";
+  } else if (
+    titleLower.includes("principal") ||
+    titleLower.includes("director") ||
+    titleLower.includes("head")
+  ) {
+    experienceLevel = "10+ years";
+  } else {
+    experienceLevel = "1–3 years";
+  }
 
   // 👇 Map remotive job_type → your Job["jobType"]
   let jobType: Job["jobType"] = "Full-time";
@@ -73,19 +98,56 @@ function mapRemotiveJobToJob(raw: RemotiveJob): Job {
   else if (jt.includes("intern")) jobType = "Internship";
   else if (jt.includes("freelance") || jt.includes("consult")) jobType = "Freelance";
 
-  // 👇 All Remotive jobs are remote
+  // 👇 All Remotive jobs are remote-ish
   const workMode: Job["workMode"] = "Remote";
 
   // 👇 JobSource must be one of your union; use "Other" for Remotive
   const source: JobSource = "Other";
 
+  // ✅ Logo: use company_logo_url first, then company_logo, else undefined
+  const companyLogo =
+    raw.company_logo_url || raw.company_logo || undefined;
+
+  // ✅ Skills: from tags + simple extraction from description
+  const tags: string[] = Array.isArray(raw.tags) ? raw.tags : [];
+  const descLower = (raw.description || "").toLowerCase();
+
+  const KEYWORDS = [
+    "react",
+    "reactjs",
+    "typescript",
+    "javascript",
+    "node",
+    "next",
+    "next.js",
+    "tailwind",
+    "redux",
+    "html",
+    "css",
+    "graphql",
+    "api",
+    "docker",
+    "aws",
+    "jest",
+    "sql",
+    "python",
+  ];
+
+  const fromDescription = KEYWORDS.filter((kw) =>
+    descLower.includes(kw)
+  );
+
+  const skills = Array.from(new Set([...tags, ...fromDescription]));
+
   return {
     id: String(raw.id ?? raw.url),
-    title: raw.title || "Untitled role",
+    title,
     company: {
-      id: raw.company_name.toLowerCase().replace(/\s+/g, "-"),
-      name: raw.company_name,
-      logoUrl: raw.company_logo ?? "",
+      id: raw.company_name
+        ? raw.company_name.toLowerCase().replace(/\s+/g, "-")
+        : "unknown-company",
+      name: raw.company_name || "Unknown company",
+      logoUrl: companyLogo, // 👈 undefined if no logo → CompanyLogo shows initials
       size: "51-200",
       industry: raw.category || "Remote / Misc",
       location: raw.candidate_required_location ?? "Remote",
@@ -98,11 +160,11 @@ function mapRemotiveJobToJob(raw: RemotiveJob): Job {
     jobType,
     workMode,
     source,
-    skills: [],
+    skills,
     postedAt: raw.publication_date || new Date().toISOString(),
     description: raw.description || "",
     responsibilities: [],
-    requiredSkills: [],
+    requiredSkills: skills,
     niceToHaveSkills: [],
     applyUrl: raw.url,
   };
@@ -141,7 +203,7 @@ export function useJobs(filters: FilterState) {
 
         let jobList = data.jobs;
 
-        // Optional backend-like location filter
+        // Optional location filter
         if (filters.location?.trim()) {
           const locationFilter = filters.location.toLowerCase();
           jobList = jobList.filter((job) =>
@@ -153,7 +215,6 @@ export function useJobs(filters: FilterState) {
 
         const mapped = jobList.map(mapRemotiveJobToJob);
 
-        // Shuffle so initial list looks "random"
         const shuffled = [...mapped].sort(() => Math.random() - 0.5);
 
         setJobs(shuffled);
