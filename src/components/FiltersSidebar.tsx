@@ -46,10 +46,40 @@ export const FiltersSidebar: React.FC<Props> = ({
   onClear,
 }) => {
   return (
-    <div className="w-full bg-white/80 backdrop-blur-xl  shadow-sm border border-slate-200/60 px-3 md:px-4 py-3 flex flex-col gap-3 md:flex-row md:flex-wrap md:items-end md:justify-between">
-      {/* Left: keyword + location */}
-     
+    <>
+      {/* ===========================
+          📱 MOBILE — Collapsible Filters
+          =========================== */}
+      <div className="md:hidden w-full">
+        <details className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-lg shadow-sm">
+          <summary className="px-4 py-3 text-sm font-medium cursor-pointer flex justify-between items-center">
+            Filters
+            <span className="text-xs text-slate-500"> ▽ </span>
+          </summary>
 
+          <div className="px-3 py-3">
+            {/* Original filter UI reused for mobile */}
+            <FilterUI filters={filters} onChange={onChange} onClear={onClear} />
+          </div>
+        </details>
+      </div>
+
+      {/* ===========================
+          🖥️ DESKTOP — Original Layout (Unchanged)
+          =========================== */}
+      <div className="hidden md:block w-full">
+        <FilterUI filters={filters} onChange={onChange} onClear={onClear} />
+      </div>
+    </>
+  );
+};
+
+/* ============================================
+   SHARED FILTER UI COMPONENT (used in both views)
+   ============================================ */
+const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
+  return (
+    <div className="w-full bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/60 px-3 md:px-4 py-3 flex flex-col gap-3 md:flex-row md:flex-wrap md:items-end md:justify-between">
       {/* Middle: dropdown filters */}
       <div className="flex flex-wrap gap-2 text-xs md:justify-center">
         {/* Experience */}
@@ -58,7 +88,7 @@ export const FiltersSidebar: React.FC<Props> = ({
             Experience
           </label>
           <select
-            className="w-full border border-slate-300  px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.experienceLevels[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -84,14 +114,12 @@ export const FiltersSidebar: React.FC<Props> = ({
             Job type
           </label>
           <select
-            className="w-full border border-slate-300  px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.jobTypes[0] ?? ""}
             onChange={(e) =>
               onChange({
                 ...filters,
-                jobTypes: e.target.value
-                  ? [e.target.value as JobType]
-                  : [],
+                jobTypes: e.target.value ? [e.target.value as JobType] : [],
               })
             }
           >
@@ -110,7 +138,7 @@ export const FiltersSidebar: React.FC<Props> = ({
             Work mode
           </label>
           <select
-            className="w-full border border-slate-300  px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.workModes[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -136,15 +164,15 @@ export const FiltersSidebar: React.FC<Props> = ({
             Company size
           </label>
           <select
-            className="w-full border border-slate-300  px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.companySizes[0] ?? ""}
             onChange={(e) =>
               onChange({
-        ...filters,
-        companySizes: e.target.value
-          ? [e.target.value as (typeof companySizes)[number]] 
-          : [],
-      })
+                ...filters,
+                companySizes: e.target.value
+                  ? [e.target.value as (typeof companySizes)[number]]
+                  : [],
+              })
             }
           >
             <option value="">Any</option>
@@ -162,7 +190,7 @@ export const FiltersSidebar: React.FC<Props> = ({
             Posted date
           </label>
           <select
-            className="w-full border border-slate-300  px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.postedDate}
             onChange={(e) =>
               onChange({
@@ -186,7 +214,7 @@ export const FiltersSidebar: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Right: salary + clear button */}
+      {/* Salary + Clear button */}
       <div className="flex flex-wrap gap-2 items-end justify-end">
         <div className="flex gap-2 text-xs">
           <div className="min-w-[90px]">
@@ -195,7 +223,7 @@ export const FiltersSidebar: React.FC<Props> = ({
             </label>
             <input
               type="number"
-              className="w-full border border-slate-300  px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+              className="w-full border border-slate-300 px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
               placeholder="Min"
               value={filters.salaryMin ?? ""}
               onChange={(e) =>
@@ -208,6 +236,7 @@ export const FiltersSidebar: React.FC<Props> = ({
               }
             />
           </div>
+
           <div className="min-w-[90px]">
             <label className="block text-slate-500 text-[11px] mb-1">
               Max salary
@@ -231,7 +260,7 @@ export const FiltersSidebar: React.FC<Props> = ({
 
         <button
           onClick={onClear}
-          className="text-xs px-3 py-2  border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 font-medium"
+          className="text-xs px-3 py-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 font-medium"
         >
           Clear all
         </button>
