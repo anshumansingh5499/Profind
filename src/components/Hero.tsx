@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiSearch, FiMapPin } from "react-icons/fi";
+import { FiSearch, FiMapPin, FiWifi } from "react-icons/fi";
 import {
   SiGoogle,
   SiNetflix,
@@ -42,60 +42,59 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
     onSearch(keyword.trim(), location.trim());
   };
 
-  // ✨ Icon list (use components, not JSX instances)
- const companyIcons = [
-  { id: "google", Icon: SiGoogle },
-  { id: "netflix", Icon: SiNetflix },
-  { id: "meta", Icon: SiMeta },
-  { id: "amazon", Icon: SiAmazon },
-  { id: "adobe", Icon: SiAdobe },
-  { id: "apple", Icon: SiApple },
-  { id: "airbnb", Icon: SiAirbnb },
-  { id: "uber", Icon: SiUber },
-  { id: "oracle", Icon: SiOracle },
-  { id: "salesforce", Icon: SiSalesforce },
-  { id: "spotify", Icon: SiSpotify },
-  { id: "stripe", Icon: SiStripe },
-  { id: "shopify", Icon: SiShopify },
-  { id: "dell", Icon: SiDell },
-  { id: "intel", Icon: SiIntel },
-  { id: "slack", Icon: SiSlack },
-  { id: "accenture", Icon: SiAccenture },
-  { id: "cisco", Icon: SiCisco },
-  { id: "siemens", Icon: SiSiemens },
-  { id: "tesla", Icon: SiTesla },
-  { id: "twitter", Icon: SiX },
-  { id: "zoom", Icon: SiZoom },
-  { id: "linkedin", Icon: SiLinkedin },
-  { id: "atlassian", Icon: SiAtlassian },
+  // ✨ Icon list (brand colors preserved)
+  const companyIcons = [
+    { id: "google", Icon: SiGoogle },
+    { id: "netflix", Icon: SiNetflix },
+    { id: "meta", Icon: SiMeta },
+    { id: "amazon", Icon: SiAmazon },
+    { id: "adobe", Icon: SiAdobe },
+    { id: "apple", Icon: SiApple },
+    { id: "airbnb", Icon: SiAirbnb },
+    { id: "uber", Icon: SiUber },
+    { id: "oracle", Icon: SiOracle },
+    { id: "salesforce", Icon: SiSalesforce },
+    { id: "spotify", Icon: SiSpotify },
+    { id: "stripe", Icon: SiStripe },
+    { id: "shopify", Icon: SiShopify },
+    { id: "dell", Icon: SiDell },
+    { id: "intel", Icon: SiIntel },
+    { id: "slack", Icon: SiSlack },
+    { id: "accenture", Icon: SiAccenture },
+    { id: "cisco", Icon: SiCisco },
+    { id: "siemens", Icon: SiSiemens },
+    { id: "tesla", Icon: SiTesla },
+    { id: "twitter", Icon: SiX },
+    { id: "zoom", Icon: SiZoom },
+    { id: "linkedin", Icon: SiLinkedin },
+    { id: "atlassian", Icon: SiAtlassian },
 
-  // 🔁 Duplicate for seamless scrolling
-  { id: "google2", Icon: SiGoogle },
-  { id: "netflix2", Icon: SiNetflix },
-  { id: "meta2", Icon: SiMeta },
-  { id: "amazon2", Icon: SiAmazon },
-  { id: "adobe2", Icon: SiAdobe },
-  { id: "apple2", Icon: SiApple },
-  { id: "airbnb2", Icon: SiAirbnb },
-  { id: "uber2", Icon: SiUber },
-  { id: "oracle2", Icon: SiOracle },
-  { id: "salesforce2", Icon: SiSalesforce },
-  { id: "spotify2", Icon: SiSpotify },
-  { id: "stripe2", Icon: SiStripe },
-  { id: "shopify2", Icon: SiShopify },
-  { id: "dell2", Icon: SiDell },
-  { id: "intel2", Icon: SiIntel },
-  { id: "slack2", Icon: SiSlack },
-  { id: "accenture2", Icon: SiAccenture },
-  { id: "cisco2", Icon: SiCisco },
-  { id: "siemens2", Icon: SiSiemens },
-  { id: "tesla2", Icon: SiTesla },
-  { id: "twitter2", Icon: SiX },
-  { id: "zoom2", Icon: SiZoom },
-  { id: "linkedin2", Icon: SiLinkedin },
-  { id: "atlassian2", Icon: SiAtlassian },
-];
-
+    // 🔁 Duplicate for seamless marquee
+    { id: "google2", Icon: SiGoogle },
+    { id: "netflix2", Icon: SiNetflix },
+    { id: "meta2", Icon: SiMeta },
+    { id: "amazon2", Icon: SiAmazon },
+    { id: "adobe2", Icon: SiAdobe },
+    { id: "apple2", Icon: SiApple },
+    { id: "airbnb2", Icon: SiAirbnb },
+    { id: "uber2", Icon: SiUber },
+    { id: "oracle2", Icon: SiOracle },
+    { id: "salesforce2", Icon: SiSalesforce },
+    { id: "spotify2", Icon: SiSpotify },
+    { id: "stripe2", Icon: SiStripe },
+    { id: "shopify2", Icon: SiShopify },
+    { id: "dell2", Icon: SiDell },
+    { id: "intel2", Icon: SiIntel },
+    { id: "slack2", Icon: SiSlack },
+    { id: "accenture2", Icon: SiAccenture },
+    { id: "cisco2", Icon: SiCisco },
+    { id: "siemens2", Icon: SiSiemens },
+    { id: "tesla2", Icon: SiTesla },
+    { id: "twitter2", Icon: SiX },
+    { id: "zoom2", Icon: SiZoom },
+    { id: "linkedin2", Icon: SiLinkedin },
+    { id: "atlassian2", Icon: SiAtlassian },
+  ];
 
   return (
     <header className="relative overflow-hidden text-slate-900">
@@ -114,10 +113,9 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
 
       <Header />
 
-      {/* 🔥 Infinite Marquee using react-icons */}
-      <div className="w-full overflow-hidden border-y border-slate-200 bg-white/80 backdrop-blur-sm">
+      {/* 🔥 Infinite Marquee */}
+      <div className="w-full overflow-hidden border-y border-slate-200 bg-slate-100 backdrop-blur-sm">
         <div className="flex min-w-max items-center py-2 animate-marquee whitespace-nowrap">
-          {/* duplicate the row twice for seamless loop */}
           {[...Array(2)].map((_, loopIndex) => (
             <div
               key={loopIndex}
@@ -126,9 +124,9 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
               {companyIcons.map(({ id, Icon }) => (
                 <div
                   key={`${id}-${loopIndex}`}
-                  className="flex items-center justify-center text-2xl text-slate-400 hover:text-slate-900 transition"
+                  className="flex items-center justify-center text-2xl transition hover:scale-110"
                 >
-                  <Icon />
+                  <Icon className="opacity-90 hover:opacity-100 transition" />
                 </div>
               ))}
             </div>
@@ -137,22 +135,24 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 md:px-8 py-12 lg:py-16">
-        {/* Text block */}
+        {/* Text */}
         <div className="max-w-3xl mx-auto text-center mb-8">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 mb-3">
-           ✧AI SMART JOB MATCHING
+            ✧ AI SMART JOB MATCHING
           </p>
 
           <h1 className="text-4xl sm:text-5xl font-semibold leading-tight tracking-tight mb-4">
             Find your next{" "}
             <span
               className="
-                inline-block px-3 py-1
-                bg-blue-500 text-white
-                border border-sky-200
+                inline-flex items-center gap-2
+                px-3 py-1
+                bg-blue-400 text-white
+                border border-slate-500
                 rotate-6
               "
             >
+              <FiWifi className="text-sm" />
               Remote
             </span>{" "}
             role
@@ -164,7 +164,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
           </p>
         </div>
 
-        {/* Search card */}
+        {/* Search Card */}
         <div
           className="
             max-w-3xl mx-auto
@@ -208,7 +208,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                 type="submit"
                 className="
                   md:w-auto w-full 
-                  bg-slate-900 text-white
+                  bg-blue-400 text-white
                   px-7 py-3 text-sm font-semibold
                   shadow-md hover:shadow-lg
                   hover:bg-black

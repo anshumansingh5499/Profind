@@ -47,9 +47,7 @@ export const FiltersSidebar: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {/* ===========================
-          📱 MOBILE — Collapsible Filters
-          =========================== */}
+      
       <div className="md:hidden w-full">
         <details className="bg-white/90 backdrop-blur-xl border border-slate-200  shadow-sm">
           <summary className="px-4 py-3 text-sm font-medium cursor-pointer flex justify-between items-center">
@@ -58,15 +56,12 @@ export const FiltersSidebar: React.FC<Props> = ({
           </summary>
 
           <div className="px-3 py-3">
-            {/* Original filter UI reused for mobile */}
             <FilterUI filters={filters} onChange={onChange} onClear={onClear} />
           </div>
         </details>
       </div>
 
-      {/* ===========================
-          🖥️ DESKTOP — Original Layout (Unchanged)
-          =========================== */}
+     
       <div className="hidden md:block w-full">
         <FilterUI filters={filters} onChange={onChange} onClear={onClear} />
       </div>
@@ -74,9 +69,6 @@ export const FiltersSidebar: React.FC<Props> = ({
   );
 };
 
-/* ============================================
-   SHARED FILTER UI COMPONENT (used in both views)
-   ============================================ */
 const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
   return (
     <div className="w-full bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/60 px-3 md:px-4 py-3 flex flex-col gap-3 md:flex-row md:flex-wrap md:items-end md:justify-between">
