@@ -1,59 +1,87 @@
 import React from "react";
 import { motion } from "framer-motion";
 import type { ParsedResume } from "../types";
-import { UploadCloud, Sparkles } from "lucide-react";
+import {
+  UploadCloud,
+  Sparkles,
+  Brain,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
+
+/* ---------------- AI STREAMING STEPS ---------------- */
+const AI_STEPS = [
+  "Reading document structure",
+  "Extracting skills",
+  "Identifying experience level",
+  "Analyzing role preferences",
+  "Detecting location preferences",
+  "Finalizing AI insights",
+];
 
 interface Props {
   resume: ParsedResume | null;
   onResumeChange: (resume: ParsedResume | null) => void;
 }
 
-export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => {
+export const ResumeAssistant: React.FC<Props> = ({
+  resume,
+  onResumeChange,
+}) => {
   const [isParsing, setIsParsing] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [currentStep, setCurrentStep] = React.useState(0);
 
+  /* ---------------- STREAM STEP PROGRESSION ---------------- */
+  React.useEffect(() => {
+    if (!isParsing) {
+      setCurrentStep(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCurrentStep((prev) =>
+        prev < AI_STEPS.length - 1 ? prev + 1 : prev
+      );
+    }, 900);
+
+    return () => clearInterval(interval);
+  }, [isParsing]);
+
+  /* ---------------- FILE UPLOAD ---------------- */
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setError(null);
     setIsParsing(true);
+    setCurrentStep(0);
 
     try {
       const formData = new FormData();
       formData.append("file", file);
 
-      // 🔗 Same style as your /api/jobs call
       const res = await fetch("/api/parse-resume", {
         method: "POST",
         body: formData,
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let payload: any = null;
-      try {
-        payload = await res.json();
-      } catch {
-        // ignore JSON parse error
-      }
+      const payload = await res.json();
 
       if (!res.ok) {
-        const msg =
-          payload?.error ||
-          `Failed to parse resume (HTTP ${res.status})`;
-        throw new Error(msg);
+        throw new Error(payload?.error || "Failed to parse resume");
       }
 
-      const parsed: ParsedResume = payload;
-      onResumeChange(parsed);
+      onResumeChange(payload);
+      setCurrentStep(AI_STEPS.length - 1);
     } catch (err) {
-      console.error(err);
       setError(
         err instanceof Error
           ? err.message
-          : "Couldn't parse your resume. Please try again."
+          : "Could not analyze resume. Try again."
       );
       onResumeChange(null);
+      setCurrentStep(0);
     } finally {
       setIsParsing(false);
       e.target.value = "";
@@ -62,156 +90,234 @@ export const ResumeAssistant: React.FC<Props> = ({ resume, onResumeChange }) => 
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="
-        relative p-6  
-        bg-white/20 backdrop-blur-2xl 
-        border border-white/30 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
-        overflow-hidden
+        relative overflow-hidden
+        rounded-3xl
+        border border-slate-200
+        bg-white
+        p-6 sm:p-8
+        shadow-[0_20px_45px_rgba(15,23,42,0.08)]
       "
     >
-      {/* 🔵 AI Glow Ring */}
-      <div className="absolute -top-20 -right-20 w-56 h-56 bg-indigo-400/30 rounded-full blur-3xl" />
-      <div className="absolute -bottom-24 -left-16 w-56 h-56 bg-purple-400/20 rounded-full blur-3xl" />
+      {/* Minimal ambient gradients */}
+      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-indigo-300/20 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full bg-sky-300/20 blur-[120px]" />
 
-      {/* ⚡ AI Chip Badge */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.7 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="
-          absolute top-4 right-4 
-          px-3 py-1.5 
-          bg-gradient-to-r from-indigo-600 to-purple-600 
-          text-white text-[10px] font-semibold 
-          shadow-lg flex items-center gap-1
-        "
-      >
-        <Sparkles size={12} /> AI Enabled
-      </motion.div>
+      {/* Header */}
+      <div className="relative z-10 mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center justify-center rounded-lg bg-indigo-50 p-2">
+            <Brain size={16} className="text-indigo-600" />
+          </span>
+          <span className="text-[11px] font-semibold tracking-widest text-indigo-600">
+            AI RESUME INTELLIGENCE
+          </span>
+        </div>
 
-      {/* HEADER */}
-      <h2 className="text-sm font-bold text-slate-900 mb-1 tracking-wide flex items-center gap-1">
-        <Sparkles size={14} className="text-indigo-600" />
-        Resume Assistant
-      </h2>
+        <h2 className="text-lg font-semibold text-slate-900">
+          Let AI understand your resume
+        </h2>
 
-      <p className="text-[11px] text-slate-600 mb-4 leading-relaxed">
-        Let AI extract your skills, experience, and preferred roles for better job matches.
-      </p>
+        <p className="mt-2 max-w-md text-sm text-slate-600">
+          Automatically extract skills, experience level, and preferences to
+          power smarter job matching.
+        </p>
+      </div>
 
-      {/* Upload Box */}
+      {/* Upload CTA */}
       <motion.label
-  initial={{ opacity: 1 }}
-  animate={
-    isParsing
-      ? {
-          scale: [1, 1.03, 1],
-          y: [0, -2, 0],
-          boxShadow: [
-            "0 0 8px rgba(99,102,241,0.3)",
-            "0 0 14px rgba(99,102,241,0.5)",
-            "0 0 8px rgba(99,102,241,0.3)",
-          ],
+        whileHover={{ scale: isParsing ? 1 : 1.015 }}
+        whileTap={{ scale: isParsing ? 1 : 0.98 }}
+        animate={
+          isParsing
+            ? {
+                boxShadow: [
+                  "0 0 0 rgba(99,102,241,0.0)",
+                  "0 0 24px rgba(99,102,241,0.35)",
+                  "0 0 0 rgba(99,102,241,0.0)",
+                ],
+              }
+            : {}
         }
-      : { scale: 1, y: 0, boxShadow: "none" }
-  }
-  transition={
-    isParsing
-      ? { repeat: Infinity, duration: 1.4, ease: "easeInOut" }
-      : { duration: 0.2 }
-  }
-  whileHover={{ scale: isParsing ? 1 : 1.02 }}
-  whileTap={{ scale: isParsing ? 1 : 0.98 }}
-  className={`
-    relative z-10 cursor-pointer
-    flex items-center justify-center gap-2
-    w-full py-3 
-    border ${isParsing ? "border-indigo-400" : "border-slate-300"}
-    bg-white/70 hover:bg-white
-    hover:border-indigo-400
-    hover:shadow-[0_0_18px_rgba(99,102,241,0.25)]
-    transition
-    ${isParsing ? "opacity-80 pointer-events-none" : ""}
-  `}
->
-  <UploadCloud size={18} className="text-indigo-600" />
-  <span className="text-[12px] font-medium text-slate-700">
-    {isParsing ? "Analyzing your resume..." : "Upload Resume (PDF / DOCX)"}
-  </span>
-  <input
-    type="file"
-    className="hidden"
-    accept=".pdf,.doc,.docx"
-    onChange={handleUpload}
-  />
-</motion.label>
+        transition={
+          isParsing
+            ? { repeat: Infinity, duration: 1.6 }
+            : { duration: 0.2 }
+        }
+        className={`
+          relative z-10
+          flex items-center justify-center gap-2
+          w-full rounded-2xl
+          border border-slate-300
+          bg-slate-50
+          py-4
+          cursor-pointer
+          hover:border-indigo-400 hover:bg-white
+          transition
+          ${isParsing ? "pointer-events-none opacity-80" : ""}
+        `}
+      >
+        {isParsing ? (
+          <>
+            <Loader2 size={16} className="animate-spin text-indigo-600" />
+            <span className="text-sm font-medium text-slate-700">
+              AI is analyzing your resume…
+            </span>
+          </>
+        ) : (
+          <>
+            <UploadCloud size={16} className="text-indigo-600" />
+            <span className="text-sm font-medium text-slate-800">
+              Upload resume (PDF or DOCX)
+            </span>
+          </>
+        )}
 
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          className="hidden"
+          onChange={handleUpload}
+        />
+      </motion.label>
 
-      {/* Error message */}
+      {/* ---------------- STREAMING AI STEPS ---------------- */}
+      {isParsing && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="
+            relative z-10 mt-6
+            rounded-2xl
+            border border-indigo-200
+            bg-indigo-50/50
+            p-5
+          "
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Brain size={14} className="text-indigo-600 animate-pulse" />
+            <p className="text-xs font-semibold text-indigo-700">
+              AI processing pipeline
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            {AI_STEPS.map((step, index) => {
+              const isActive = index === currentStep;
+              const isDone = index < currentStep;
+
+              return (
+                <div key={step} className="flex items-center gap-2">
+                  {isDone ? (
+                    <CheckCircle2 size={14} className="text-emerald-500" />
+                  ) : isActive ? (
+                    <Loader2
+                      size={14}
+                      className="text-indigo-600 animate-spin"
+                    />
+                  ) : (
+                    <div className="h-3.5 w-3.5 rounded-full border border-slate-300" />
+                  )}
+
+                  <span
+                    className={`text-[11px] ${
+                      isActive
+                        ? "font-medium text-indigo-700"
+                        : isDone
+                        ? "text-slate-600"
+                        : "text-slate-400"
+                    }`}
+                  >
+                    {step}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Error */}
       {error && (
-        <p className="mt-2 text-[11px] text-red-600">
+        <p className="relative z-10 mt-3 text-xs text-red-600">
           {error}
         </p>
       )}
 
-      {/* AI Parsed Output */}
+      {/* ---------------- AI OUTPUT ---------------- */}
       {resume && !error && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.3 }}
           className="
-            mt-6 p-5 
-            bg-white/60 border border-slate-200 
-            shadow-sm relative
+            relative z-10 mt-8
+            rounded-2xl
+            border border-slate-200
+            bg-white
+            p-5
           "
         >
-          <p className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1">
-            <Sparkles size={12} className="text-indigo-600" />
-            AI-Parsed Summary
-          </p>
-
-          <p className="text-[11px] text-slate-600 mb-2">
-            Experience:{" "}
-            <span className="font-semibold text-slate-900">
-              {resume.totalExperienceYears ?? 0} yrs
-            </span>{" "}
-            · {resume.inferredExperienceLevel ?? "Not specified"}
-          </p>
-
-          <p className="text-[11px] text-slate-600 mb-1">Skills Identified:</p>
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {resume.skills?.map((s) => (
-              <span
-                key={s}
-                className="
-                  px-2 py-0.5
-                  bg-indigo-50 border border-indigo-100 
-                  text-[10px] text-indigo-700
-                "
-              >
-                {s}
-              </span>
-            ))}
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles size={14} className="text-indigo-600" />
+            <p className="text-sm font-semibold text-slate-900">
+              AI Insights
+            </p>
           </div>
 
-          <p className="text-[11px] text-slate-600 mb-1">Preferred Locations:</p>
-          <div className="flex flex-wrap gap-1">
-            {resume.preferredLocations?.map((loc) => (
-              <span
-                key={loc}
-                className="
-                  px-2 py-0.5 rounded-full 
-                  bg-slate-50 border border-slate-200 
-                  text-[10px] text-slate-700
-                "
-              >
-                {loc}
-              </span>
-            ))}
+          <p className="mb-4 text-xs text-slate-600">
+            Experience detected:{" "}
+            <span className="font-semibold text-slate-900">
+              {resume.totalExperienceYears ?? 0} yrs ·{" "}
+              {resume.inferredExperienceLevel ?? "—"}
+            </span>
+          </p>
+
+          <div className="mb-4">
+            <p className="mb-1 text-xs text-slate-600">Skills</p>
+            <div className="flex flex-wrap gap-1.5">
+              {resume.skills?.map((s) => (
+                <span
+                  key={s}
+                  className="
+                    rounded-full
+                    border border-indigo-200
+                    bg-indigo-50
+                    px-2 py-0.5
+                    text-[10px]
+                    text-indigo-700
+                  "
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-1 text-xs text-slate-600">
+              Preferred locations
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {resume.preferredLocations?.map((l) => (
+                <span
+                  key={l}
+                  className="
+                    rounded-full
+                    border border-slate-200
+                    bg-slate-50
+                    px-2 py-0.5
+                    text-[10px]
+                    text-slate-700
+                  "
+                >
+                  {l}
+                </span>
+              ))}
+            </div>
           </div>
         </motion.div>
       )}
