@@ -48,8 +48,8 @@ export const FiltersSidebar: React.FC<Props> = ({
   return (
     <>
       
-      <div className="md:hidden w-full">
-        <details className="bg-white/90 backdrop-blur-xl border border-slate-200  shadow-sm">
+      <div className="md:hidden w-full ">
+        <details className="bg-white/90 backdrop-blur-xl border border-slate-200  shadow-sm rounded-xl">
           <summary className="px-4 py-3 text-sm font-medium cursor-pointer flex justify-between items-center">
             Filters
             <span className="text-xs text-slate-500">Tap to open ▽ </span>
@@ -71,16 +71,16 @@ export const FiltersSidebar: React.FC<Props> = ({
 
 const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
   return (
-    <div className="w-full bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/60 px-3 md:px-4 py-3 flex flex-col gap-3 md:flex-row md:flex-wrap md:items-end md:justify-between">
+    <div className="rounded-xl w-full bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/60 px-3 md:px-4 py-3 flex flex-col gap-3 md:flex-row md:flex-wrap md:items-end md:justify-between">
       {/* Middle: dropdown filters */}
       <div className="flex flex-wrap gap-2 text-xs md:justify-center">
         {/* Experience */}
         <div className="min-w-[130px]">
-          <label className="block text-slate-500 text-[11px] mb-1">
+          <label className="block text-slate-500 text-[11px] mb-1 ">
             Experience
           </label>
           <select
-            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.experienceLevels[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -106,7 +106,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
             Job type
           </label>
           <select
-            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.jobTypes[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -126,11 +126,11 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
 
         {/* Work mode */}
         <div className="min-w-[120px]">
-          <label className="block text-slate-500 text-[11px] mb-1">
+          <label className=" rounded-xl block text-slate-500 text-[11px] mb-1">
             Work mode
           </label>
           <select
-            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.workModes[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -156,7 +156,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
             Company size
           </label>
           <select
-            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.companySizes[0] ?? ""}
             onChange={(e) =>
               onChange({
@@ -182,7 +182,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
             Posted date
           </label>
           <select
-            className="w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+            className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs bg-white focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
             value={filters.postedDate}
             onChange={(e) =>
               onChange({
@@ -215,7 +215,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
             </label>
             <input
               type="number"
-              className="w-full border border-slate-300 px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+              className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
               placeholder="Min"
               value={filters.salaryMin ?? ""}
               onChange={(e) =>
@@ -235,7 +235,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
             </label>
             <input
               type="number"
-              className="w-full border border-slate-300 px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+              className="rounded-xl w-full border border-slate-300 px-2 py-2 text-xs shadow-sm focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
               placeholder="Max"
               value={filters.salaryMax ?? ""}
               onChange={(e) =>
@@ -252,7 +252,7 @@ const FilterUI: React.FC<Props> = ({ filters, onChange, onClear }) => {
 
         <button
           onClick={onClear}
-          className="text-xs px-3 py-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 font-medium"
+          className="rounded-xl text-xs px-3 py-2 border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 font-medium"
         >
           Clear all
         </button>
