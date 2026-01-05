@@ -20,14 +20,14 @@ export const JobList: React.FC<Props> = ({
 }) => {
   if (!jobs.length) {
     return (
-      <div className="flex-1 flex items-center justify-center text-sm text-slate-500">
+      <div className="flex-1 flex items-center justify-center text-sm text-slate-500 rounded-lg">
         No jobs found for this combination of filters.
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col gap-2 overflow-y-auto max-h-auto pr-2">
+    <div className="flex-1 flex flex-col gap-2 overflow-y-auto max-h-auto pr-2 ">
       {jobs.map((job) => (
         <JobCard
           key={job.id}
