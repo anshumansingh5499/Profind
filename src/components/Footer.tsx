@@ -1,75 +1,157 @@
-// src/components/Footer.tsx
 import React from "react";
 import { Linkedin, Github, Mail } from "lucide-react";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="relative mt-16 bg-white/60 backdrop-blur-xl border-t border-black">
-      {/* Decorative gradient glow */}
-      <div className="absolute inset-x-0 -top-12 h-20 bg-gradient-to-r from-indigo-400/20 via-purple-400/20 to-pink-400/20 blur-3xl pointer-events-none"></div>
+    <footer className="relative mt-24 bg-gradient-to-b from-slate-100 via-slate-150 to-white text-slate-300">
+      {/* Ambient top glow */}
+      <div className="pointer-events-none absolute inset-x-0 -top-24 h-40  blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-3 gap-10">
-        {/* Brand */}
-        <div>
-          <div className="flex items-center gap-2">
-            <img
-              src="/logo.png"
-              alt="ProFind logo"
-              className="h-12 w-auto object-contain  backdrop-blur-md p-2  "
-            />
+      <div className="relative max-w-7xl mx-auto px-6 py-16">
+        {/* Top section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
+          {/* Brand */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="ProFind AI"
+                className="h-10 w-auto"
+              />
+             
+            </div>
+
+            <p className="mt-4 text-sm text-black leading-relaxed max-w-sm">
+              ProFind AI helps you align your resume with the right opportunities
+              using intelligent matching, skill analysis, and AI-driven insights.
+            </p>
           </div>
 
-          <p className="text-[14px] text-slate-700 mt-3 leading-relaxed">
-            AI-powered job search designed to match you with the right
-            opportunities faster and smarter.
-          </p>
-        </div>
+          {/* Product */}
+          <div>
+            <p className="text-sm font-semibold text-black mb-4">
+              Product
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Resume Assistant
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Job Matching
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  AI Copilot
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  ATS Insights
+                </a>
+              </li>
+            </ul>
+          </div>
 
-        {/* Quick Links */}
-        <div>
-          <p className="text-slate-800 font-semibold mb-3 text-[15px]">
-            Quick Links
-          </p>
-          <div className="flex flex-col gap-2 text-[14px] text-slate-600">
-            <a className="hover:text-indigo-600 transition" href="#">
-              Privacy Policy
-            </a>
-            <a className="hover:text-indigo-600 transition" href="#">
-              Terms of Service
-            </a>
-            <a className="hover:text-indigo-600 transition" href="#">
-              Help & Support
-            </a>
+          {/* Company */}
+          <div>
+            <p className="text-sm font-semibold text-black mb-4">
+              Company
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Terms of Service
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <p className="text-sm font-semibold text-black mb-4">
+              Resources
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Resume Tips
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-500 transition text-black">
+                  Contact
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Social */}
-        <div>
-          <p className="text-slate-800 font-semibold mb-3 text-[15px]">
-            Connect With Us
+        {/* Divider */}
+        <div className="my-12 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+        {/* Bottom bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <p>
+            © {new Date().getFullYear()}{" "}
+            <span className="text-slate-200 font-medium">
+              ProFind AI
+            </span>
+            . All rights reserved.
           </p>
-          <div className="flex gap-4">
-            <a className="p-3 rounded-xl bg-white/50 backdrop-blur-md shadow hover:shadow-md hover:bg-indigo-50 transition">
-              <Linkedin size={18} className="text-indigo-600" />
-            </a>
-            <a className="p-3 rounded-xl bg-white/50 backdrop-blur-md shadow hover:shadow-md hover:bg-indigo-50 transition">
-              <Github size={18} className="text-indigo-600" />
+
+          <div className="flex items-center gap-3">
+            <a
+              href="#"
+              className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition"
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={16} />
             </a>
             <a
-              href="mailto:contact@jobfinder.ai"
-              className="p-3 rounded-xl bg-white/50 backdrop-blur-md shadow hover:shadow-md hover:bg-indigo-50 transition"
+              href="#"
+              className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition"
+              aria-label="GitHub"
             >
-              <Mail size={18} className="text-indigo-600" />
+              <Github size={16} />
+            </a>
+            <a
+              href="mailto:contact@profind.ai"
+              className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition"
+              aria-label="Email"
+            >
+              <Mail size={16} />
             </a>
           </div>
         </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="text-[12px] text-slate-700 text-center py-4 border-t border-white/30 bg-gradient-to-r from-indigo-50/60 to-purple-50/60">
-        © {new Date().getFullYear()}{" "}
-        <span className="font-semibold">ProFind AI</span>. All rights
-        reserved.
       </div>
     </footer>
   );
