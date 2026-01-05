@@ -19,7 +19,7 @@ export const JobDetailPanel: React.FC<Props> = ({
 }) => {
   if (!job) {
     return (
-      <div className="bg-white shadow-sm border border-slate-100 p-4 text-xs text-slate-500 h-fit flex items-center justify-center">
+      <div className="bg-white shadow-sm border border-slate-100 p-4 text-xs text-slate-500 h-fit flex items-center justify-center rounded-xl">
         Select a job to view details.
       </div>
     );
