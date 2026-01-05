@@ -37,7 +37,7 @@ export const JobDetailPanel: React.FC<Props> = ({
   };
 
   return (
-    <section className="bg-white shadow-md border border-slate-100 px-6 py-5 max-h-[1150px] overflow-y-auto custom-scroll">
+    <section className="bg-white shadow-md border border-slate-100 px-6 py-5 max-h-[1650px] overflow-y-auto custom-scroll rounded-xl">
       {/* 🔥 AI Resume Advisor */}
       <div className="mb-6">
         <AiResumeAdvisor job={job} resume={resume} />
@@ -66,7 +66,7 @@ export const JobDetailPanel: React.FC<Props> = ({
           <button
             onClick={() => onToggleSave(job)}
             className="text-[11px] flex items-center gap-1 px-3 py-1.5 
-            border border-slate-300 hover:border-indigo-400 hover:bg-indigo-50"
+            border border-slate-300 hover:border-indigo-400 hover:bg-indigo-50 rounded-lg"
           >
             {isSaved ? (
               <>
@@ -85,7 +85,7 @@ export const JobDetailPanel: React.FC<Props> = ({
             rel="noopener noreferrer"
             onClick={handleApplyClick}
             className="text-[11px] flex items-center gap-1 px-3 py-1.5 
-            bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm"
+            bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm rounded-lg"
           >
             Apply <ExternalLink size={12} />
           </a>
