@@ -114,7 +114,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
       <Header />
 
       {/* 🔥 Infinite Marquee */}
-      <div className="w-full overflow-hidden border-y border-slate-200 bg-slate-100 backdrop-blur-sm">
+      <div className="w-full overflow-hidden border-y border-slate-200  backdrop-blur-sm">
         <div className="flex min-w-max items-center py-2 animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, loopIndex) => (
             <div
@@ -126,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                   key={`${id}-${loopIndex}`}
                   className="flex items-center justify-center text-2xl transition hover:scale-110"
                 >
-                  <Icon className="opacity-90 hover:opacity-100 transition" />
+                  <Icon className="opacity-60 hover:opacity-100 transition" />
                 </div>
               ))}
             </div>
