@@ -79,15 +79,15 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Hero onSearch={handleSearch} />
 
-      <main className="flex-1 px-4 md:px-8 lg:px-12 py-6 flex flex-col gap-4">
+      <main className="flex-1 px-4 md:px-8 lg:px-12 py-6 flex flex-col gap-4 ">
         <FiltersSidebar
           filters={filters}
           onChange={setFilters}
           onClear={handleClearFilters}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.7fr),minmax(0,1.1fr)] gap-4">
-          <section className="bg-white  shadow-sm border border-slate-100 p-4 flex flex-col">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.7fr),minmax(0,1.1fr)] gap-4 ">
+          <section className="bg-white  shadow-sm border border-slate-100 p-4 flex flex-col rounded-xl">
             <div className="flex justify-between items-center mb-4 gap-2">
               <div>
                 <h2 className="text-lg font-semibold">
