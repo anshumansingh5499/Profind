@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
                 text-white shadow-md
                 hover:shadow-lg hover:brightness-105
                 active:scale-[0.97]
-                transition
+                transition rounded-xl
               "
             >
               Sign Up
